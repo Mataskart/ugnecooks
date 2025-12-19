@@ -27,6 +27,7 @@ jobs:
 
             cd server
             pnpm install --frozen-lockfile || pnpm install
+            pnpm prisma generate
             pnpm prisma migrate deploy
             PORT=3001 pm2 restart ugnecooks-api-staging --update-env || PORT=3001 pm2 start index.js --name ugnecooks-api-staging --interpreter node
 
