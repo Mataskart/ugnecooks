@@ -29,6 +29,7 @@ jobs:
 
             cd server
             pnpm install --frozen-lockfile || pnpm install
+            pnpm prisma migrate deploy
             pm2 restart ugnecooks-api || pm2 start index.js --name ugnecooks-api --interpreter node
 
             cd ../web
