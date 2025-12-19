@@ -13,5 +13,4 @@
   "volta": {
     "node": "24.12.0"
   }
-  "postinstall": "prisma generate"
 }
