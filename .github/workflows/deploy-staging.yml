@@ -1,0 +1,38 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches: ["develop"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            export CI=true
+            export VOLTA_HOME="$HOME/.volta"
+            export PATH="$VOLTA_HOME/bin:$PATH"
+            pnpm config set interactive false
+
+            cd /srv/ugnecooks-staging
+            git fetch --all
+            git reset --hard origin/develop
+
+            cd server
+            pnpm install --frozen-lockfile || pnpm install
+            PORT=3001 pm2 restart ugnecooks-api-staging --update-env || PORT=3001 pm2 start index.js --name ugnecooks-api-staging --interpreter node
+
+            cd ../web
+            pnpm install --frozen-lockfile || pnpm install
+            pnpm build
+            rsync -a --delete dist/ /var/www/ugnecooks-staging/web/dist/
+
+            sudo systemctl reload nginx
+            pm2 save
