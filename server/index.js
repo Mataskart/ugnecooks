@@ -1,5 +1,13 @@
 import dotenv from "dotenv";
-dotenv.config({ path: new URL("./.env", import.meta.url).pathname });
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+// Build a real filesystem path to ./server/.env (works on Windows + Linux)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, ".env") });
+
 import express from "express";
 import cookieSession from "cookie-session";
 import argon2 from "argon2";
