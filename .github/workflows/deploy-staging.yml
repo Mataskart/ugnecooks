@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy via SSH (attempt 1)
+        id: ssh1
         continue-on-error: true
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -44,6 +45,8 @@ jobs:
             pm2 save
 
       - name: Deploy via SSH (attempt 2)
+        id: ssh2
+        if: steps.ssh1.outcome == 'failure'
         continue-on-error: true
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -79,6 +82,8 @@ jobs:
             pm2 save
 
       - name: Deploy via SSH (attempt 3)
+        id: ssh3
+        if: steps.ssh1.outcome == 'failure' && steps.ssh2.outcome == 'failure'
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
