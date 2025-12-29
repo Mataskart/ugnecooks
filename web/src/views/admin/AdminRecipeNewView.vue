@@ -31,7 +31,6 @@ async function submit() {
       instructions: instructions.value,
     });
 
-    // After creating, go to edit page (or to public view if you prefer)
     router.push(`/admin/recipes/${created.id}/edit`);
   } catch (e: any) {
     error.value = e?.message ?? "Create failed";
@@ -48,6 +47,7 @@ async function submit() {
         <h1>Admin · Naujas receptas</h1>
         <p class="muted">Sukuriamas receptas bus viešai matomas.</p>
       </div>
+
       <router-link class="btn btn--ghost" to="/admin/recipes">Atgal</router-link>
     </div>
 
@@ -59,14 +59,14 @@ async function submit() {
           required
           minlength="2"
           maxlength="120"
-          placeholder="e.g., Pasta"
+          placeholder="Pvz., Pasta"
           :disabled="saving"
         />
       </label>
 
       <label class="field">
         <span class="field__label">Aprašymas (nebūtina)</span>
-        <input v-model="description" placeholder="Short summary…" :disabled="saving" />
+        <input v-model="description" placeholder="Trumpai apie receptą…" :disabled="saving" />
       </label>
 
       <label class="field">
@@ -80,7 +80,7 @@ async function submit() {
           v-model="ingredients"
           required
           rows="8"
-          placeholder="- noodles&#10;- salt"
+          placeholder="- makaronai&#10;- druska"
           :disabled="saving"
         ></textarea>
       </label>
@@ -91,7 +91,7 @@ async function submit() {
           v-model="instructions"
           required
           rows="10"
-          placeholder="1) Boil water…"
+          placeholder="1) Užvirkite vandenį…"
           :disabled="saving"
         ></textarea>
       </label>
@@ -115,24 +115,22 @@ async function submit() {
   gap: 16px;
   margin-bottom: 18px;
 }
+
 h1 {
   margin: 0;
-  font-size: 28px;
-}
-.muted {
-  color: rgba(233, 236, 241, 0.68);
-}
-.error {
-  color: #ffb4b4;
+  font-size: 32px;
+  line-height: 1.1;
+  color: rgba(43, 27, 26, 0.92);
 }
 
 .form {
   display: grid;
   gap: 12px;
-  padding: 16px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  padding: 18px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .field {
@@ -142,22 +140,29 @@ h1 {
 
 .field__label {
   font-size: 13px;
-  color: rgba(233, 236, 241, 0.75);
+  font-weight: 700;
+  color: rgba(43, 27, 26, 0.70);
 }
 
+/* Use global input styles, but keep nice focus ring */
 input,
 textarea {
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-  color: inherit;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(43, 27, 26, 0.16);
+  color: rgba(43, 27, 26, 0.92);
 }
 
-input:disabled,
-textarea:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+input::placeholder,
+textarea::placeholder {
+  color: rgba(43, 27, 26, 0.45);
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(255, 95, 166, 0.35);
+  box-shadow: 0 0 0 4px rgba(255, 95, 166, 0.12);
 }
 
 textarea {
@@ -167,26 +172,14 @@ textarea {
 .actions {
   display: flex;
   justify-content: flex-end;
+  margin-top: 4px;
 }
 
-.btn {
-  padding: 9px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(124, 92, 255, 0.5);
-  background: rgba(124, 92, 255, 0.15);
-  color: inherit;
-  cursor: pointer;
-}
-.btn--ghost {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+/* Mobile: stack header button under title if needed */
+@media (max-width: 620px) {
+  .head {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 </style>

@@ -89,17 +89,16 @@ onMounted(load);
 </template>
 
 <style scoped>
+/* Header */
 .head {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 18px;
-  padding-left: 14px;
-  padding-right: 14px;
 }
 
-/* Make the left side of the header align with the list content */
+/* Ensure title area can shrink */
 .head > div {
   flex: 1;
   min-width: 0;
@@ -108,88 +107,79 @@ onMounted(load);
 
 h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: clamp(20px, 5.5vw, 28px);
 }
 
-.muted {
-  color: rgba(233, 236, 241, 0.68);
-}
-
-.error {
-  color: #ffb4b4;
-}
-
+/* List */
 .list {
   display: grid;
   gap: 10px;
 }
 
+/* Row becomes a responsive grid:
+   - left side grows/shrinks
+   - right side actions wrap */
 .row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto;
   gap: 12px;
+
   padding: 14px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
+
+  min-width: 0; /* critical */
 }
 
+/* Left column */
 .row__main {
-  flex: 1;
-  min-width: 0;          /* prevents overflow pushing layout weirdly */
-  text-align: left;      /* <-- main fix: no more centered titles */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* ensures left alignment even if parent tries centering */
+  min-width: 0;
+  text-align: left;
+  display: grid;
+  gap: 4px;
 }
-
 
 .row__title {
-  width: 100%;
-  white-space: nowrap;
+  font-weight: 700;
+
+  /* allow shrink + ellipsis */
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .row__meta {
-  width: 100%;
-  white-space: nowrap;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
+/* Actions: wrap and never force overflow */
 .row__actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   justify-content: flex-end;
+  align-content: flex-start;
+
+  min-width: 0;
 }
 
-.btn {
-  padding: 9px 12px;
+/* Make buttons shrink nicely instead of pushing layout */
+.row__actions :deep(.btn) {
+  padding: 8px 10px;
   border-radius: 12px;
-  border: 1px solid rgba(124, 92, 255, 0.5);
-  background: rgba(124, 92, 255, 0.15);
-  color: inherit;
-  cursor: pointer;
+  font-size: 13px;
+
+  /* important: allow wrapping in extreme widths */
+  white-space: normal;
+  line-height: 1.1;
 }
 
-.btn--ghost {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.btn--danger {
-  border-color: rgba(255, 80, 80, 0.45);
-  background: rgba(255, 80, 80, 0.12);
-}
-
-.btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
+/* Empty state */
 .empty {
   padding: 18px;
   border-radius: 16px;
@@ -197,18 +187,40 @@ h1 {
   color: rgba(233, 236, 241, 0.75);
 }
 
+/* Medium mobile: stack header + make actions left-aligned */
 @media (max-width: 680px) {
   .head {
     flex-direction: column;
     align-items: stretch;
   }
+
   .row {
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: 1fr;
   }
+
   .row__actions {
-    width: 100%;
     justify-content: flex-start;
+  }
+}
+
+/* Extreme narrow screens: make actions a 2-column grid so nothing overflows */
+@media (max-width: 360px) {
+  .row__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .row__actions :deep(.btn) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Ultra narrow (your 213px test): one button per line */
+@media (max-width: 260px) {
+  .row__actions {
+    grid-template-columns: 1fr;
   }
 }
 </style>

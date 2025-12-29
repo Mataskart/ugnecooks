@@ -6,7 +6,7 @@ import { listRecipes, type RecipeListItem } from "../recipes";
  * Public recipes list page.
  * Uses GET /api/recipes (no auth required).
  *
- * This version displays coverImageUrl thumbnails when present.
+ * Displays coverImageUrl thumbnails when present.
  */
 
 const q = ref("");
@@ -38,7 +38,12 @@ onMounted(load);
       </div>
 
       <form class="search" @submit.prevent="load">
-        <input v-model="q" placeholder="Paieška..." :disabled="loading" />
+        <input
+          v-model="q"
+          placeholder="Paieška..."
+          :disabled="loading"
+          aria-label="Paieška"
+        />
         <button class="btn" type="submit" :disabled="loading">
           {{ loading ? "…" : "Ieškoti" }}
         </button>
@@ -55,7 +60,6 @@ onMounted(load);
         class="card"
         :to="`/recipes/${r.slug}`"
       >
-        <!-- Cover image thumbnail -->
         <div class="thumb" :class="{ 'thumb--empty': !r.coverImageUrl }">
           <img
             v-if="r.coverImageUrl"
@@ -96,7 +100,7 @@ onMounted(load);
   margin-bottom: 18px;
 }
 
-/* IMPORTANT: keep header aligned left like the cards */
+/* keep header aligned left like the cards */
 .page__head > div {
   flex: 1;
   min-width: 0;
@@ -105,16 +109,9 @@ onMounted(load);
 
 h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 30px;
   text-align: left;
-}
-
-.muted {
-  color: rgba(233, 236, 241, 0.68);
-}
-
-.error {
-  color: #ffb4b4;
+  line-height: 1.1;
 }
 
 .search {
@@ -123,48 +120,59 @@ h1 {
   align-items: center;
 }
 
+/* IMPORTANT: use the global light-theme input styling */
 .search input {
-  width: 220px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-  color: inherit;
+  width: 260px;
+  max-width: 100%;
+}
+
+/* add a nicer focus ring (cookbook-y) */
+.search input:focus {
+  outline: none;
+  border-color: rgba(255, 95, 166, 0.35);
+  box-shadow: 0 0 0 4px rgba(255, 95, 166, 0.12);
 }
 
 .search input:disabled {
   opacity: 0.65;
 }
 
+/* Grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
+/* Cards now match the new theme */
 .card {
   display: grid;
   gap: 10px;
   padding: 14px;
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   text-decoration: none;
   color: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
 }
 
 .card:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 16px 38px rgba(43, 27, 26, 0.12);
 }
 
 .thumb {
   width: 100%;
-  height: 140px;
-  border-radius: 14px;
+  height: 160px;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
 }
 
 .thumb__img {
@@ -180,18 +188,20 @@ h1 {
 }
 
 .thumb__placeholder {
-  color: rgba(233, 236, 241, 0.8);
+  color: rgba(43, 27, 26, 0.55);
   font-size: 28px;
 }
 
 .card__title {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 16px;
+  color: rgba(43, 27, 26, 0.92);
 }
 
 .card__desc {
   font-size: 14px;
   line-height: 1.45;
+  color: rgba(43, 27, 26, 0.80);
 }
 
 .card__meta {
@@ -199,31 +209,34 @@ h1 {
   font-size: 12px;
 }
 
+/* Empty state */
 .empty {
   grid-column: 1 / -1;
   padding: 18px;
-  border-radius: 16px;
-  border: 1px dashed rgba(255, 255, 255, 0.14);
-  color: rgba(233, 236, 241, 0.75);
+  border-radius: var(--radius-xl);
+  border: 1px dashed rgba(43, 27, 26, 0.20);
+  background: rgba(255, 255, 255, 0.55);
+  color: rgba(43, 27, 26, 0.70);
 }
 
-.btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
+/* Responsive */
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
 @media (max-width: 620px) {
   .page__head {
     flex-direction: column;
     align-items: stretch;
   }
+  .search {
+    width: 100%;
+  }
   .search input {
     width: 100%;
+    flex: 1;
   }
   .grid {
     grid-template-columns: 1fr;

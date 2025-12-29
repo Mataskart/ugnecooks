@@ -1,79 +1,324 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* ==========================================================================
+   UgneCooks — Global Styles (Cookbook / Cozy Mid-Theme)
+   Fixes mobile overflow + shared design system utilities
+   ========================================================================== */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* 1) Layout safety */
+*, *::before, *::after { box-sizing: border-box; }
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
+html, body {
+  width: 100%;
+  max-width: 100%;
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+img, video, svg, canvas { max-width: 100%; height: auto; display: block; }
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: anywhere; }
+pre, code { overflow-wrap: anywhere; }
+
+/* 2) Theme tokens — middle ground (warm, not overpowering) */
+:root {
+  /* overall sizing (slightly larger on desktop) */
+  font-size: 17px;
+
+  /* background + surfaces */
+  --bg: #fff7f7;                 /* warm paper */
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-2: rgba(255, 244, 244, 0.72);
+
+  /* text */
+  --text: #2b1b1a;
+  --muted: rgba(43, 27, 26, 0.62);
+
+  /* borders/shadows */
+  --border: rgba(43, 27, 26, 0.10);
+  --shadow: 0 12px 34px rgba(43, 27, 26, 0.10);
+
+  /* accents */
+  --accent: #ff5fa6;             /* pink */
+  --accent-2: #ff986a;           /* peach */
+  --accent-soft: rgba(255, 95, 166, 0.12);
+
+  --radius-xl: 22px;
+  --radius-lg: 18px;
+  --radius-md: 14px;
+
+  /* widen content slightly on big screens */
+  --container: 1280px;
+  --gutter: 22px;
+
+  font-family: ui-rounded, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+}
+
+/* slightly tighter gutters on small screens */
+@media (max-width: 520px) {
+  :root { --gutter: 16px; }
+}
+
+/* 3) Base page background — softer desktop gradients */
+body {
+  color: var(--text);
+  background:
+    /* corner tints */
+    radial-gradient(1100px 780px at 5% 0%, rgba(255, 95, 166, 0.15), transparent 62%),
+    radial-gradient(1050px 760px at 95% 10%, rgba(255, 152, 106, 0.15), transparent 60%),
+
+    /* center wash so the middle isn't empty */
+    radial-gradient(900px 600px at 50% 45%, rgba(255, 95, 166, 0.08), transparent 65%),
+    radial-gradient(1000px 700px at 55% 55%, rgba(255, 152, 106, 0.07), transparent 70%),
+
+    /* bottom warmth */
+    radial-gradient(900px 620px at 50% 115%, rgba(255, 210, 220, 0.30), transparent 58%),
+
+    /* subtle paper texture */
+    repeating-linear-gradient(
+      45deg,
+      rgba(43, 27, 26, 0.015) 0px,
+      rgba(43, 27, 26, 0.015) 1px,
+      transparent 1px,
+      transparent 14px
+    ),
+
+    
+    var(--bg);
+}
+
+/* 4) Common helpers */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Make footer stay at bottom even when page content is short */
+#app, .app {
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.app {
+  display: flex;
+  flex-direction: column;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.main {
+  flex: 1;                 /* key: takes remaining height */
+  padding-top: 28px;
+  padding-bottom: 56px;
 }
 
-.card {
-  padding: 2em;
+/* If any view needs a generic page wrapper */
+.page {
+  display: grid;
+  gap: 16px;
 }
 
-#app {
-  max-width: 1280px;
+/* Text helpers */
+.muted { color: var(--muted); }
+.error { color: #d63a53; }
+
+/* 5) Topbar/Footer — matched tint so footer doesn’t look “different” */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255, 95, 166, 0.10),
+    rgba(255, 152, 106, 0.10)
+  ), rgba(255, 247, 247, 0.80);
+
+  border-bottom: 1px solid rgba(43, 27, 26, 0.10);
+  backdrop-filter: blur(10px);
+}
+
+.topbar__inner,
+.footer__inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  width: 100%;
+  max-width: var(--container);
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 16px var(--gutter);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.footer {
+  border-top: 1px solid rgba(43, 27, 26, 0.10);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 95, 166, 0.08),
+    rgba(255, 152, 106, 0.08)
+  ), rgba(255, 247, 247, 0.72);
+
+  color: var(--muted);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.brand__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 0 5px rgba(255, 95, 166, 0.16);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 8px;
+  min-width: 0;
+}
+
+.nav__link {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.nav__link:hover {
+  color: var(--text);
+  background: rgba(255, 95, 166, 0.10);
+}
+
+.nav__link--pill {
+  border: 1px solid rgba(43, 27, 26, 0.10);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.auth {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.auth__email {
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Phones: keep one line (no unnecessary wrap) */
+@media (max-width: 620px) {
+  .topbar__inner {
+    flex-wrap: nowrap;
+    gap: 10px;
   }
-  a:hover {
-    color: #747bff;
+
+  .nav {
+    order: 0;
+    width: auto;
+    margin-left: 8px;
   }
-  button {
-    background-color: #f9f9f9;
+
+  .auth {
+    order: 0;
+    margin-left: auto;
   }
+
+  .auth__email { max-width: 140px; }
+}
+
+/* Only wrap on VERY small screens */
+@media (max-width: 360px) {
+  .topbar__inner {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav { width: 100%; }
+  .auth { width: 100%; justify-content: flex-end; }
+}
+
+/* 6) Buttons — softer, less “neon” */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  border: 1px solid rgba(255, 95, 166, 0.30);
+  background: rgba(255, 255, 255, 0.60);
+
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+
+  box-shadow: 0 10px 22px rgba(43, 27, 26, 0.08);
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(255, 95, 166, 0.38);
+}
+
+.btn--ghost {
+  border-color: rgba(43, 27, 26, 0.10);
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: none;
+}
+
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.btn--danger {
+  border-color: rgba(214, 58, 83, 0.28);
+  background: rgba(214, 58, 83, 0.08);
+  box-shadow: none;
+}
+
+.btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+/* 7) Form controls — warm paper tint */
+input, textarea, select {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(43, 27, 26, 0.10);
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.86),
+    rgba(255, 244, 244, 0.72)
+  );
+
+  color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(43, 27, 26, 0.04);
+}
+
+textarea { resize: vertical; }
+input:disabled, textarea:disabled, select:disabled { opacity: 0.65; cursor: not-allowed; }
+
+/* 8) Generic panels/cards */
+.panel {
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(43, 27, 26, 0.10);
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
