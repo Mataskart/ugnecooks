@@ -130,28 +130,64 @@ onMounted(load);
 </template>
 
 <style scoped>
+/* Header: responsive grid so title doesn't get crushed by actions */
 .head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto;
   gap: 16px;
+  align-items: end;
   margin-bottom: 18px;
+
+  /* important: allow the left side to shrink properly */
+  min-width: 0;
 }
-.head__actions {
-  display: flex;
-  gap: 10px;
+
+.head > div {
+  min-width: 0;
+  text-align: left;
 }
+
 h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: clamp(20px, 5.5vw, 28px);
+  line-height: 1.15;
+
+  /* prevent silly letter-by-letter breaks */
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: auto;
 }
+
 .muted {
   color: rgba(233, 236, 241, 0.68);
+
+  /* long ids/slugs should wrap, but not destroy the heading */
+  overflow-wrap: anywhere;
 }
+
 .error {
   color: #ffb4b4;
 }
 
+/* Actions: wrap and never force overflow */
+.head__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-content: flex-start;
+
+  min-width: 0;
+}
+
+/* Make the buttons a bit more compact in the header */
+.head__actions :deep(.btn) {
+  padding: 8px 10px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Form (keep your existing look) */
 .form {
   display: grid;
   gap: 12px;
@@ -171,42 +207,45 @@ h1 {
   color: rgba(233, 236, 241, 0.75);
 }
 
-input,
-textarea {
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-  color: inherit;
-}
-
-textarea {
-  resize: vertical;
-}
-
 .actions {
   display: flex;
   justify-content: flex-end;
 }
 
-.btn {
-  padding: 9px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(124, 92, 255, 0.5);
-  background: rgba(124, 92, 255, 0.15);
-  color: inherit;
-  cursor: pointer;
+/* Stack actions under title on mobile */
+@media (max-width: 680px) {
+  .head {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .head__actions {
+    justify-content: flex-start;
+  }
+
+  /* optional: make the primary action full-width on small screens */
+  .head__actions :deep(.btn) {
+    width: fit-content;
+  }
 }
-.btn--ghost {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+
+/* Extreme narrow screens: make actions two columns, then one */
+@media (max-width: 360px) {
+  .head__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .head__actions :deep(.btn) {
+    width: 100%;
+    justify-content: center;
+  }
 }
-.btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+
+@media (max-width: 260px) {
+  .head__actions {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

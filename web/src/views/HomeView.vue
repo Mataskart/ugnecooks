@@ -112,21 +112,13 @@ onMounted(load);
 
 h1 {
   margin: 0 0 6px;
-  font-size: 34px;
+  font-size: clamp(26px, 6.5vw, 34px);
   line-height: 1.15;
 }
 
 .section-title {
   margin: 0 0 12px;
   font-size: 16px;
-}
-
-.muted {
-  color: rgba(233, 236, 241, 0.68);
-}
-
-.error {
-  color: #ffb4b4;
 }
 
 .divider {
@@ -203,23 +195,6 @@ h1 {
   color: rgba(233, 236, 241, 0.75);
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start; /* forces button to top align with h1 */
-  justify-content: center;
-  padding: 9px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(124, 92, 255, 0.5);
-  background: rgba(124, 92, 255, 0.15);
-  color: inherit;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.btn:hover {
-  background: rgba(124, 92, 255, 0.22);
-}
 
 @media (max-width: 900px) {
   .grid {

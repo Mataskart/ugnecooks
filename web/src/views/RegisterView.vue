@@ -38,7 +38,7 @@ async function submit() {
 </script>
 
 <template>
-  <div style="max-width:420px;margin:40px auto;">
+  <div class="authBox">
     <h1>Registracija</h1>
 
     <form @submit.prevent="submit" style="display:grid;gap:12px;">

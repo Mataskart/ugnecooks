@@ -70,32 +70,29 @@ onMounted(load);
 </template>
 
 <style scoped>
+/* Use the new global tokens from style.css (light theme) */
 .back {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 14px;
-  color: rgba(233, 236, 241, 0.75);
   text-decoration: none;
+  color: rgba(43, 27, 26, 0.72);
+  font-weight: 600;
 }
 .back:hover {
-  color: rgba(233, 236, 241, 0.95);
+  color: rgba(43, 27, 26, 0.92);
 }
 
 h1 {
   margin: 0 0 8px;
-  font-size: 30px;
+  font-size: 32px;
+  line-height: 1.1;
 }
 
 h2 {
   margin: 0 0 10px;
   font-size: 16px;
-}
-
-.muted {
-  color: rgba(233, 236, 241, 0.68);
-}
-
-.error {
-  color: #ffb4b4;
 }
 
 .recipe {
@@ -104,24 +101,26 @@ h2 {
 }
 
 .cover {
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .cover__img {
   width: 100%;
-  height: 320px;
+  height: 340px;
   object-fit: cover;
   display: block;
 }
 
 .recipe__head {
   padding: 18px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .cols {
@@ -132,19 +131,22 @@ h2 {
 
 .box {
   padding: 16px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
+/* IMPORTANT: your old .content color was nearly-white; fixed for light theme */
 .content {
   margin: 0;
   white-space: pre-wrap;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-    monospace;
-  font-size: 13px;
-  line-height: 1.5;
-  color: rgba(233, 236, 241, 0.9);
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.55;
+
+  color: rgba(43, 27, 26, 0.88);
 }
 
 @media (max-width: 900px) {
@@ -152,7 +154,7 @@ h2 {
     grid-template-columns: 1fr;
   }
   .cover__img {
-    height: 220px;
+    height: 240px;
   }
 }
 </style>
